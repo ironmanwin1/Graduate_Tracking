@@ -1,61 +1,109 @@
 import flet as ft
+import httpx
 
-def ProfileView(page: ft.Page):
-    student_id = page.client_storage.get("student_id") or "65030226"
+class ProfileView(ft.View):
+    def __init__(self, page: ft.Page):
+        # ตั้ง route เป็น "/profile" เหมือนเดิม
+        super().__init__("/profile")
+        self.page = page
 
-    mock_profiles = {
-        "65030226": {
-            "id": "65030226",
-            "user_type": "Student",
-            "name_en": "Watcharakorn Noipandee",
-            "name_th": "วัชรากร น้อยพันธ์ดี",
-            "admission_year": "2565",
-            "term": "1",
-            "status": "out of condition",
-            "semester": "2",
-            "year": "2570",
-            "plan": "-",
-            "admission_type": "-",
-            "course": "-"
-        }
-    }
+        # เรียกใช้ฟังก์ชันโหลดข้อมูล
+        student = self.get_logged_in_student()
 
-    user = mock_profiles.get(student_id)
+        # ปุ่มกลับหน้า Home
+        back_button = ft.IconButton(
+            icon=ft.icons.ARROW_BACK,
+            tooltip="กลับไปหน้า Home",
+            on_click=lambda e: page.go("/home")
+        )
 
-    return ft.View(
-        route="/profile",
-        controls=[
-            ft.AppBar(
-                title=ft.Text("ข้อมูลส่วนตัว"),
-                bgcolor="#e91e63",
-                center_title=True,
-                leading=ft.IconButton(icon=ft.icons.ARROW_BACK, on_click=lambda _: page.go("/home")),
-            ),
-            ft.Container(
-                expand=True,
-                padding=20,
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.CircleAvatar(radius=40, bgcolor="#f8bbd0"),
-                            ft.IconButton(icon=ft.icons.LOGOUT, icon_color="red", on_click=lambda _: page.go("/"))
-                        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                        ft.Text("Profile", size=20, weight=ft.FontWeight.BOLD),
-                        ft.TextField(label="ID", value=user["id"], read_only=True),
-                        ft.TextField(label="User Type", value=user["user_type"], read_only=True),
-                        ft.TextField(label="Name (EN)", value=user["name_en"], read_only=True),
-                        ft.TextField(label="Name (TH)", value=user["name_th"], read_only=True),
-                        ft.TextField(label="Year of admission", value=user["admission_year"], read_only=True),
-                        ft.TextField(label="Term", value=user["term"], read_only=True),
-                        ft.TextField(label="Education plan", value=user["plan"], read_only=True),
-                        ft.TextField(label="Admission type", value=user["admission_type"], read_only=True),
-                        ft.TextField(label="Student status", value=user["status"], read_only=True),
-                        ft.TextField(label="Semester", value=user["semester"], read_only=True),
-                        ft.TextField(label="Year", value=user["year"], read_only=True),
-                        ft.TextField(label="Course", value=user["course"], read_only=True),
-                    ],
-                    scroll=ft.ScrollMode.AUTO,
+        header = ft.Row(
+            controls=[
+                back_button,
+                ft.Text("หน้าข้อมูลส่วนตัว (ProfileView)", size=24, weight="bold")
+            ],
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=10
+        )
+
+        if not student:
+            # ถ้าไม่เจอนักศึกษาหรือไม่มี student_id
+            self.controls = [
+                header,
+                ft.Divider(),
+                ft.Text("ไม่พบนักศึกษา", size=20, color="red")
+            ]
+        else:
+            # สร้าง UI จากข้อมูลนักศึกษา
+            left_column = ft.Column([
+                ft.CircleAvatar(
+                    foreground_image_src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                    radius=60
+                ),
+                ft.Text(f"{student.get('prefix', '')} {student.get('name', '')}", weight="bold"),
+                ft.Text(f"รหัสนักศึกษา: {student.get('student_id', '')}"),
+                ft.Text(f"เบอร์โทรศัพท์: {student.get('phone', '')}"),
+                ft.Text(f"อีเมล: {student.get('email', '')}"),
+                ft.Text("ลายเซ็นออนไลน์:", weight="bold", top=10),
+                ft.Image(src=student.get('signature_url', ''), width=200, height=60)
+            ], spacing=10)
+
+            right_column = ft.Column([
+                ft.Text("ข้อมูลการศึกษา", weight="bold", size=16),
+                ft.Text(f"ระดับปริญญา: {student.get('degree_level', '')}"),
+                ft.Text(f"หลักสูตร: {student.get('program', '')}"),
+                ft.Text(f"แผนการเรียน: {student.get('study_plan', '')}"),
+                ft.Divider(),
+                ft.Text("ข้อมูลวิทยานิพนธ์", weight="bold", size=16),
+                ft.Text(f"ชื่อเรื่อง: {student.get('thesis', {}).get('title', '')}"),
+                ft.Text(f"อาจารย์ที่ปรึกษาหลัก: {student.get('thesis', {}).get('advisor', '')}"),
+                ft.Text(f"อาจารย์ที่ปรึกษาร่วม: {student.get('thesis', {}).get('co_advisor', '')}"),
+                ft.Text(
+                    f"สอบหัวข้อ: {student.get('thesis', {}).get('proposal_exam', {}).get('status', '')}"
+                    f" (วันที่: {student.get('thesis', {}).get('proposal_exam', {}).get('date', '-')})"
+                ),
+                ft.Text(
+                    f"สอบสุดท้าย: {student.get('thesis', {}).get('final_exam', {}).get('status', '')}"
+                ),
+                ft.Divider(),
+                ft.Text("คะแนนสอบภาษาอังกฤษ", weight="bold", size=16),
+                ft.Text(
+                    f"{student.get('english_test', {}).get('type', '')}"
+                    f" คะแนน {student.get('english_test', {}).get('score', '')}"
                 )
+            ], spacing=8)
+
+            layout = ft.Row(
+                controls=[
+                    ft.Container(left_column, expand=1, padding=20),
+                    ft.Container(right_column, expand=2, padding=20),
+                ],
+                spacing=20,
+                scroll="AUTO"
             )
-        ]
-    )
+
+            self.controls = [
+                header,
+                ft.Divider(),
+                layout
+            ]
+
+    def get_logged_in_student(self):
+        # ฟังก์ชันโหลดข้อมูลจาก FastAPI
+        # ดึง student_id จาก client_storage
+        student_id = self.page.client_storage.get("student_id")
+        print("📦 student_id from storage:", student_id)
+
+        if not student_id:
+            return None
+
+        try:
+            res = httpx.get(f"http://127.0.0.1:8000/api/student/{student_id}")
+            print("📡 API Status:", res.status_code)
+            print("📡 API Response:", res.json())
+            if res.status_code == 200 and "student_id" in res.json():
+                return res.json()
+        except Exception as e:
+            print("❌ Error connecting to API:", e)
+
+        return None

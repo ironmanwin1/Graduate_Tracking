@@ -1,8 +1,9 @@
 import flet as ft
-from profile_screen import ProfileView
 from document_detail import DocumentDetailView
 from home import HomeView
 from signin import SignInView
+from profile_screen import ProfileView
+
 
 
 def main(page: ft.Page):
@@ -18,6 +19,7 @@ def main(page: ft.Page):
             page.views.append(SignInView(page))
         elif page.route == "/profile":
             page.views.append(ProfileView(page))
+            page.update()
         elif page.route == "/document":
             page.views.append(DocumentDetailView(page))
         elif page.route == "/home":
@@ -28,4 +30,4 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     route_change(page.route)
 
-ft.app(target=main)
+ft.app(target=main, view=ft.WEB_BROWSER)

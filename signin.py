@@ -1,76 +1,39 @@
-
 import flet as ft
+import json
 
-def SignInView(page: ft.Page):
-    # Here you can display some content for authentication
-    title = ft.Text("Authentication", size=30, color="#e91e63")
-    page.add(title)
-
-    # โลโก้
-    logo = ft.Image(src="assets/logo.png", width=150)
-
-    # หัวบาร์สีชมพู + โลโก้ด้านใน
-    header_bar = ft.Container(
-        bgcolor="#f5a1c4",
-        height=100,
-        alignment=ft.alignment.center,
-        content=ft.Row(
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[logo]
-        )
-    )
-
-    # กล่อง Sign In
-    title_text = ft.Text("ยืนยันตัวตนด้วยบริการของสถาบันฯ", weight=ft.FontWeight.BOLD, size=16)
-    subtitle_text = ft.Text("โดยใช้ E-mail Account ของสถาบันฯ", size=12)
-
-    username_field = ft.TextField(label="Username", border_radius=10, filled=True)
-    password_field = ft.TextField(label="Password", password=True, can_reveal_password=True, border_radius=10, filled=True)
-
-    def on_login(e):
-        student_id = username_field.value.strip()
-        if student_id:
-            page.client_storage.set("student_id", student_id)
-            page.go("/home")
-        else:
-            page.snack_bar = ft.SnackBar(ft.Text("กรุณากรอก Student ID"), bgcolor="red")
-            page.snack_bar.open = True
-            page.update()
-
-    sign_in_button = ft.ElevatedButton(
-        text="Next",
-        bgcolor="#f5a1c4",
-        color="white",
-        width=100,
-        on_click=on_login
-    )
-
-    card = ft.Container(
-        padding=20,
-        bgcolor="#e91e63",
-        border_radius=20,
-        content=ft.Column(
-            controls=[
-                title_text,
-                subtitle_text,
-                username_field,
-                password_field,
-                sign_in_button
-            ],
-            spacing=15,
-            alignment=ft.MainAxisAlignment.CENTER
-        )
-    )
-
-    return ft.Column(
-        expand=True,
-        controls=[
-            header_bar,
-            ft.Container(
-                expand=True,
-                alignment=ft.alignment.top_center,
-                content=card,
-                padding=30
-            )
+class SignInView(ft.View):
+    def __init__(self, page: ft.Page):
+        super().__init__("/")
+        self.page = page
+        self.username = ft.TextField(label="อีเมล", autofocus=True, width=300)
+        self.password = ft.TextField(label="รหัสผ่าน", password=True, can_reveal_password=True, width=300)
+        self.error_text = ft.Text(color="red")
+        self.controls = [
+            ft.Column([
+                ft.Text("ระบบติดตามนักศึกษาบัณฑิตศึกษา", size=24, weight="bold"),
+                self.username,
+                self.password,
+                ft.ElevatedButton(text="เข้าสู่ระบบ", on_click=self.sign_in),
+                self.error_text,
+            ], horizontal_alignment="center", alignment=ft.MainAxisAlignment.CENTER, spacing=20)
         ]
-    )
+
+    def sign_in(self, e):
+        email = self.username.value.strip()
+        password = self.password.value.strip()
+        try:
+            with open("mock_data/student.json", "r", encoding="utf-8") as f:
+                students = json.load(f)
+        except:
+            self.error_text.value = "ไม่สามารถโหลดข้อมูลนักศึกษาได้"
+            self.page.update()
+            return
+
+        for student in students:
+            if student["email"] == email and password == "1234":
+                self.page.client_storage.set("student_id", student["student_id"])
+                self.page.go("/home")
+                return
+
+        self.error_text.value = "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
+        self.page.update()

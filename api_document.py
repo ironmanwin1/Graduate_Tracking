@@ -17,3 +17,8 @@ mock_documents = [
 
 def get_document_by_id(doc_id: str):
     return next((doc for doc in mock_documents if doc["id"] == doc_id), None)
+
+def load_mock_documents():
+    import json
+    with open("mock_data/documents.json", "r", encoding="utf-8") as f:
+        return json.load(f)

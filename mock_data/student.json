@@ -1,0 +1,33 @@
+[
+  {
+    "student_id": "66050123",
+    "email": "66050123@kmitl.ac.th",
+    "name": "วัชรากร น้อยพันธ์ดี",
+    "prefix": "นาย",
+    "phone": "0912345678",
+    "signature_url": "https://example.com/signature123.png",
+    "degree_level": "ปริญญาโท",
+    "program": "วิศวกรรมคอมพิวเตอร์",
+    "study_plan": "แผน ก แบบ ก2",
+    "year": 2566,
+    "semester": 1,
+    "status": "เรียน",
+    "thesis": {
+      "title": "ระบบติดตามสถานะนักศึกษาบัณฑิตศึกษา",
+      "advisor": "ผศ.สุระชัย พิมพ์สาลี",
+      "co_advisor": "ดร.สมชาย",
+      "proposal_exam": {
+        "status": "ผ่าน",
+        "date": "2025-01-10"
+      },
+      "final_exam": {
+        "status": "ยังไม่สอบ",
+        "date": null
+      }
+    },
+    "english_test": {
+      "type": "TOEIC",
+      "score": 550
+    }
+  }
+]
