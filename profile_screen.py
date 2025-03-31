@@ -107,3 +107,33 @@ class ProfileView(ft.View):
             print("❌ Error connecting to API:", e)
 
         return None
+    
+    import httpx
+import flet as ft
+
+def show_form_details(page: ft.Page):
+    try:
+        res = httpx.get("http://127.0.0.1:8000/api/form")
+        if res.status_code == 200:
+            form_data = res.json()
+        else:
+            form_data = {"error": "Failed to fetch form data"}
+    except Exception as e:
+        form_data = {"error": str(e)}
+    
+    if "error" in form_data:
+        return ft.Text(f"Error: {form_data['error']}", color="red")
+    else:
+        controls = [
+            ft.Text(f"Form Title: {form_data.get('title', '')}", size=16, weight="bold")
+        ]
+        for field in form_data.get("fields", []):
+            controls.append(
+                ft.Text(
+                    f"{field.get('label')} ({field.get('type')}) - Placeholder: {field.get('placeholder')}",
+                    size=14
+                )
+            )
+        controls.append(ft.Text(f"Submit URL: {form_data.get('submit_url', '')}", size=14))
+        return ft.Column(controls=controls, spacing=5)
+

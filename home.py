@@ -9,7 +9,7 @@ def HomeView(page: ft.Page):
             page.client_storage.set("doc_id", doc_id)
             page.go("/document")
         return handler
-
+    
     # mock ข้อมูลเอกสาร
     documents = [
         {"id": "001", "title": "ขอสอบประมวลความรู้ / ใบคำร้องขอสอบปลายภาค", "status": "รอดำเนินการ"},

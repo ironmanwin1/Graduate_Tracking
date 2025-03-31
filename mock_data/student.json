@@ -1,11 +1,10 @@
 [
   {
-    "student_id": "66050123",
-    "email": "66050123@kmitl.ac.th",
-    "name": "วัชรากร น้อยพันธ์ดี",
+    "student_id": "65030226",
+    "email": "65030226@kmitl.ac.th",
+    "name": "Watcharakorn Noipandee",
     "prefix": "นาย",
     "phone": "0912345678",
-    "signature_url": "https://example.com/signature123.png",
     "degree_level": "ปริญญาโท",
     "program": "วิศวกรรมคอมพิวเตอร์",
     "study_plan": "แผน ก แบบ ก2",
@@ -28,6 +27,67 @@
     "english_test": {
       "type": "TOEIC",
       "score": 550
+    }
+  },
+  {
+    "student_id": "65030130",
+    "email": "65030130@kmitl.ac.th",
+    "name": "นิติภูมิ จันทร์อ่ำ",
+    "prefix": "นาย",
+    "phone": "0891234567",
+    "degree_level": "ปริญญาโท",
+    "program": "วิศวกรรมโยธา",
+    "study_plan": "แผน ข",
+    "year": 2566,
+    "semester": 1,
+    "status": "รอสอบหัวข้อ",
+    "thesis": {
+      "title": "การวิเคราะห์โครงสร้างสะพานด้วย Finite Element",
+      "advisor": "ผศ.สุระชัย พิมพ์สาลี",
+      "co_advisor": "อ.ดร.กิตติศักดิ์",
+      "proposal_exam": {
+        "status": "ยังไม่สอบ",
+        "date": null
+      },
+      "final_exam": {
+        "status": "ยังไม่สอบ",
+        "date": null
+      }
+    },
+    "english_test": {
+      "type": "IELTS",
+      "score": 6.0
+    }
+  },
+  {
+    "student_id": "65030276",
+    "email": "65030276@kmitl.ac.th",
+    "name": "อนพัทธ์ รักเล่ง",
+    "prefix": "นาย",
+    "phone": "0908765432",
+    "signature_url": "https://example.com/signature789.png",
+    "degree_level": "ปริญญาตรี",
+    "program": "ครุศาสตร์",
+    "study_plan": "แผน A",
+    "year": 2565,
+    "semester": 2,
+    "status": "เรียน",
+    "thesis": {
+      "title": "การศึกษาเรื่องการสอน",
+      "advisor": "ผศ.สุระชัย พิมพ์สาลี",
+      "co_advisor": "อาจารย์สมศักดิ์",
+      "proposal_exam": {
+        "status": "ผ่าน",
+        "date": "2025-02-15"
+      },
+      "final_exam": {
+        "status": "ยังไม่สอบ",
+        "date": null
+      }
+    },
+    "english_test": {
+      "type": "TOEIC",
+      "score": 500
     }
   }
 ]
