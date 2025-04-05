@@ -137,3 +137,4 @@ def show_form_details(page: ft.Page):
         controls.append(ft.Text(f"Submit URL: {form_data.get('submit_url', '')}", size=14))
         return ft.Column(controls=controls, spacing=5)
 
+

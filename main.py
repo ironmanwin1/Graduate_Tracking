@@ -2,7 +2,8 @@ import flet as ft
 from document_detail import DocumentDetailView
 from home import HomeView
 from signin import SignInView
-from profile_screen import ProfileView
+from profile_screen_responsive_scroll import ProfileView
+from contact_screen import ContactView
 
 
 
@@ -24,6 +25,8 @@ def main(page: ft.Page):
             page.views.append(DocumentDetailView(page))
         elif page.route == "/home":
             page.views.append(HomeView(page))
+        elif page.route == "/contact":
+            page.views.append(ContactView(page))
 
         page.update()
 

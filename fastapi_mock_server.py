@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+import os
 import json
+
 
 app = FastAPI()
 
-# CORS: ให้ Flet App เรียกจาก localhost ได้
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,7 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# โหลดข้อมูล mock จากไฟล์ student.json
 @app.get("/api/student/{student_id}")
 def get_student(student_id: str): 
     with open("mock_data/student.json", "r", encoding="utf-8") as f:
@@ -23,14 +24,10 @@ def get_student(student_id: str):
             return s
     return {"error": "Student not found"}
 
-@app.get("/api/form")
-def get_form():
-    try:
-        with open("mock_data/form.json", "r", encoding="utf-8") as f:
-            form_data = json.load(f)
-        return form_data
-    except Exception as e:
-        return {"error": "Unable to load form data", "detail": str(e)}
-
-
-
+@app.get("/form/{student_id}/{form_id}")
+def get_student_form(student_id: str, form_id: str):
+    filename = f"{student_id}_{form_id}.pdf"
+    file_path = f"mock_files/{filename}"
+    if os.path.exists(file_path):
+        return FileResponse(path=file_path, filename=filename, media_type="application/pdf")
+    return {"error": "File not found"}

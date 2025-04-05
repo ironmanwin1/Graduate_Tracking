@@ -45,7 +45,7 @@ def HomeView(page: ft.Page):
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                 ft.ElevatedButton(
                     text="ดูรายละเอียด",
-                    bgcolor="#e91e63",
+                    bgcolor="#ed4988",
                     color="white",
                     on_click=go_document_detail(doc["id"]),
                     height=32,
@@ -67,13 +67,13 @@ def HomeView(page: ft.Page):
         padding=10,
         content=ft.Column([
             ft.Row([
-                ft.IconButton(icon=ft.icons.ACCOUNT_CIRCLE, icon_color="#e91e63", icon_size=30, on_click=go_profile),
+                ft.IconButton(icon=ft.icons.ACCOUNT_CIRCLE, icon_color="#ed4988", icon_size=30, on_click=go_profile),
                 ft.Container(
-                    content=ft.Image(src="assets/logo.png", width=50),
+                    content=ft.Image(src="/Users/watcharakorn/Desktop/grad_tracking_app/assets/logo1.png", width=50),
                     expand=True,
                     alignment=ft.alignment.center
                 ),
-                ft.IconButton(icon=ft.icons.LOGOUT, icon_color="#e91e63", on_click=lambda _: page.go("/"))
+                ft.IconButton(icon=ft.icons.LOGOUT, icon_color="#ed4988", on_click=lambda _: page.go("/"))
             ]),
             ft.TextField(
                 hint_text="Search",
@@ -92,10 +92,9 @@ def HomeView(page: ft.Page):
         bgcolor="white",
         padding=10,
         content=ft.Row([
-            ft.Icon(name=ft.icons.CHAT, color="#e91e63"),
-            ft.Icon(name=ft.icons.HOME, color="#e91e63"),
-            ft.Icon(name=ft.icons.NOTIFICATIONS, color="#e91e63"),
-            ft.Icon(name=ft.icons.PERSON, color="#e91e63"),
+            ft.IconButton(icon=ft.icons.CHAT, icon_color="#ed4988", on_click=lambda _: page.go("/contact")),
+            ft.IconButton(icon=ft.icons.HOME, icon_color="#ed4988", on_click=lambda _: page.go("/home")),
+            ft.IconButton(icon=ft.icons.NOTIFICATIONS, icon_color="#ed4988"),
         ],
         alignment=ft.MainAxisAlignment.SPACE_AROUND)
     )
